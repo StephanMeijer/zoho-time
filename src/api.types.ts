@@ -86,11 +86,11 @@ export interface IUser {
 }
 
 export interface IUsersResponse extends IApiResponse {
-    users: IUser[]
+    users: IUser[];
 }
 
 export interface IProjectsResponse extends IApiResponse {
-    projects: IProject[]
+    projects: IProject[];
 }
 
 export interface ITimeEntriesResponse extends IApiResponse {

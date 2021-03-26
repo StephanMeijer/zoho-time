@@ -1,7 +1,7 @@
 import {Command, flags} from '@oclif/command'
 
 import cli from 'cli-ux'
-import { clientFromConfig } from '../api'
+import {clientFromConfig} from '../api'
 
 const axios = require('axios')
 const os = require('os')
@@ -33,11 +33,11 @@ export default class Projects extends Command {
       data.projects,
       {
         status: {},
-        customer_name: { header: 'Customer' },
-        project_name: { header: 'Name' },
+        customer_name: {header: 'Customer'},
+        project_name: {header: 'Name'},
         description: {},
-        rate: {}
-      }
+        rate: {},
+      },
     )
   }
 }

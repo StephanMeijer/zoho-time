@@ -1,5 +1,5 @@
 import {Command, flags} from '@oclif/command'
-import { getConfig } from '../config'
+import {getConfig} from '../config'
 
 const os = require('os')
 const path = require('path')
@@ -40,7 +40,7 @@ export default class Config extends Command {
 
     const config = yaml.load(content)
 
-    console.log('Location:', filepath, "\n")
+    console.log('Location:', filepath, '\n')
     console.dir(config)
   }
 }

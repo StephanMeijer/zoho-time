@@ -3,10 +3,10 @@ import {Command, flags} from '@oclif/command'
 import {CLIError} from '@oclif/errors'
 
 import cli from 'cli-ux'
-import { clientFromConfig } from '../api'
-import { AuthorizationHeader, getConfig, setConfig } from '../config'
+import {clientFromConfig} from '../api'
+import {AuthorizationHeader, getConfig, setConfig} from '../config'
 
-import { API } from '../constants'
+import {API} from '../constants'
 
 const axios = require('axios')
 const os = require('os')
@@ -39,15 +39,15 @@ export default class TimeEntriesLog extends Command {
     cli.table(
       data.time_entries,
       {
-        log_date: { header: 'Date' },
-        customer_name: { header: 'Customer' },
-        project_name: { header: 'Project' },
-        log_time: { header: 'Duration' },
-        notes: {}
+        log_date: {header: 'Date'},
+        customer_name: {header: 'Customer'},
+        project_name: {header: 'Project'},
+        log_time: {header: 'Duration'},
+        notes: {},
       },
       {
-        sort: "-log_date"
-      }
+        sort: '-log_date',
+      },
     )
   }
 }

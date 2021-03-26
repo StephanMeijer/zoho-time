@@ -1,6 +1,6 @@
 import {CLIError} from '@oclif/errors'
 import axios from 'axios'
-import { API, REDIRECT_URI } from './constants'
+import {API, REDIRECT_URI} from './constants'
 
 const os = require('os')
 const path = require('path')
@@ -25,7 +25,6 @@ export interface ITokenResponse {
     token_type: string;
 }
 
-
 export interface IRefreshTokenResponse {
     access_token: string;
     token_type: string;
@@ -42,66 +41,66 @@ export interface IConfig<T> {
 const filepath = path.join(os.homedir(), '.zt.yml')
 
 export const getConfig = async (): Promise<IConfig<Date>> => {
-    await fs.access(filepath, states.R_OK)
-    const content = await fs.readFile(filepath)
-    const config = yaml.load(content) as IConfig<string>
+  await fs.access(filepath, states.R_OK)
+  const content = await fs.readFile(filepath)
+  const config = yaml.load(content) as IConfig<string>
 
-    if (config.auth) {
-        return {
-            ...config,
-            auth: {
-                ...config.auth,
-                expires_at: new Date(config.auth.expires_at)
-            }
-        }
+  if (config.auth) {
+    return {
+      ...config,
+      auth: {
+        ...config.auth,
+        expires_at: new Date(config.auth.expires_at),
+      },
     }
+  }
 
-    const { client_id, client_secret } = config
+  const {client_id, client_secret} = config
 
-    return { client_id, client_secret };
+  return {client_id, client_secret}
 }
 
 export const setConfig = async (config: IConfig<Date>): Promise<void> => {
-    const codedConfig: IConfig<string> = {
-        ...config,
-        auth: config.auth ? {
-            ...config.auth,
-            expires_at: config.auth.expires_at.toISOString()
-        } : undefined
-    }
+  const codedConfig: IConfig<string> = {
+    ...config,
+    auth: config.auth ? {
+      ...config.auth,
+      expires_at: config.auth.expires_at.toISOString(),
+    } : undefined,
+  }
 
-    await fs.writeFile(filepath, yaml.dump(codedConfig))
+  await fs.writeFile(filepath, yaml.dump(codedConfig))
 }
 
 export const validToken = async (config: IConfig<Date> | undefined = undefined): Promise<boolean> => {
-    if (!config) {
-        config = await getConfig()
-    }
-  
-    if (config.auth) {
-      return new Date() < new Date(config.auth.expires_at)
-    }
-  
-    return false;
+  if (!config) {
+    config = await getConfig()
+  }
+
+  if (config.auth) {
+    return new Date() < new Date(config.auth.expires_at)
+  }
+
+  return false
 }
 
 export const authorizationHeader = async (config: IConfig<Date> | undefined = undefined): Promise<{ Authorization: string }> => {
-    if (!config) {
-        config = await getConfig()
-    }
+  if (!config) {
+    config = await getConfig()
+  }
 
-    if (!config.auth) {
-        throw new CLIError("Please run `zt login`.");
-    }
+  if (!config.auth) {
+    throw new CLIError('Please run `zt login`.')
+  }
 
-    if (!await validToken()) {
-        var dateTimeOfRequest = new Date();
-        const response = await axios.post<IRefreshTokenResponse>(API.RefreshToken(config.client_id, config.client_secret, config.auth.refresh_token));
+  if (!await validToken()) {
+    const dateTimeOfRequest = new Date()
+    const response = await axios.post<IRefreshTokenResponse>(API.RefreshToken(config.client_id, config.client_secret, config.auth.refresh_token))
 
-        dateTimeOfRequest.setTime(dateTimeOfRequest.getTime() + 1000 * response.data.expires_in)
-        config.auth = { ...config.auth, ...response.data, expires_at: dateTimeOfRequest }
-        setConfig(config)
-    }
+    dateTimeOfRequest.setTime(dateTimeOfRequest.getTime() + 1000 * response.data.expires_in)
+    config.auth = {...config.auth, ...response.data, expires_at: dateTimeOfRequest}
+    setConfig(config)
+  }
 
-    return { Authorization: `Bearer ${config.auth.access_token}` };
+  return {Authorization: `Bearer ${config.auth.access_token}`}
 }

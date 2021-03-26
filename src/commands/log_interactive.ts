@@ -1,15 +1,15 @@
 import {Command, flags} from '@oclif/command'
 
 import {CLIError} from '@oclif/errors'
-import { boolean } from '@oclif/parser/lib/flags'
+import {boolean} from '@oclif/parser/lib/flags'
 
 import cli from 'cli-ux'
-import { clientFromConfig } from '../api'
-import { ITimeEntry } from '../api.types'
-import { AuthorizationHeader, getConfig, setConfig } from '../config'
+import {clientFromConfig} from '../api'
+import {ITimeEntry} from '../api.types'
+import {AuthorizationHeader, getConfig, setConfig} from '../config'
 
-import { API } from '../constants'
-import { valiDate } from '../lib/date'
+import {API} from '../constants'
+import {valiDate} from '../lib/date'
 
 const axios = require('axios')
 const os = require('os')
@@ -38,64 +38,64 @@ export default class TimeEntriesLogInteractive extends Command {
   async run() {
     const client = await clientFromConfig()
     const data = await client.getTimeEntries()
-    const config = await getConfig();
+    const config = await getConfig()
 
-    const { projects } = await client.getProjects()
+    const {projects} = await client.getProjects()
 
     cli.table(
-      projects.map((p, i )=> ({ i, ...p  })),
+      projects.map((p, i) => ({i, ...p})),
       {
-        i: { header: "Index" },
+        i: {header: 'Index'},
         status: {},
-        customer_name: { header: 'Customer' },
-        project_name: { header: 'Name' },
+        customer_name: {header: 'Customer'},
+        project_name: {header: 'Name'},
         description: {},
-        rate: {}
-      }
+        rate: {},
+      },
     )
 
-    console.log("")
+    console.log('')
 
-    var projectI, taskI, date, timeOrPeriod, start, end, period;
+    let projectI; let taskI; let date; let timeOrPeriod; let start; let end; let period
 
-    var postData: Partial<ITimeEntry> = {};
+    const postData: Partial<ITimeEntry> = {}
 
     while (projects[parseInt(projectI)] === undefined) {
-      projectI = await cli.prompt("What customer and project do you want to log for?")
+      projectI = await cli.prompt('What customer and project do you want to log for?')
     }
 
-    console.log("")
+    console.log('')
 
     const project = projects[parseInt(projectI)]
 
-    postData.project_id = project.project_id;
-    
-    const { task } = await client.getTasks(project.project_id)
+    postData.project_id = project.project_id
+
+    const {task} = await client.getTasks(project.project_id)
 
     cli.table(
-      task.map((p, i )=> ({ i, ...p  })),
+      task.map((p, i) => ({i, ...p})),
       {
-        i: { header: "Index" },
-        customer_name: { header: 'Customer' },
-        project_name: { header: 'Project' },
-        task_name: { header: 'Task' },
-        description: {}
-      }
+        i: {header: 'Index'},
+        customer_name: {header: 'Customer'},
+        project_name: {header: 'Project'},
+        task_name: {header: 'Task'},
+        description: {},
+      },
     )
 
-    console.log("")
+    console.log('')
 
     while (projects[parseInt(taskI)] === undefined) {
-      taskI = await cli.prompt("What task do you want to log for?")
+      taskI = await cli.prompt('What task do you want to log for?')
     }
 
     postData.task_id = task[taskI].task_id
 
     while (!postData.log_date) {
-      postData.log_date = valiDate(await cli.prompt("On what date do you want to log? (today, yesterday, tomorrow, sunday, ..saturday, YYYY-MM-DD)")) as string
+      postData.log_date = valiDate(await cli.prompt('On what date do you want to log? (today, yesterday, tomorrow, sunday, ..saturday, YYYY-MM-DD)')) as string
     }
 
-    while ([ 'T', 'P' ].indexOf(timeOrPeriod) === -1) {
+    while (['T', 'P'].indexOf(timeOrPeriod) === -1) {
       timeOrPeriod = await cli.prompt('Time or period? [T / P]')
     }
 
@@ -108,16 +108,16 @@ export default class TimeEntriesLogInteractive extends Command {
 
     postData.notes = await cli.prompt('Description')
 
-    const currentUser = await client.getCurrentUser(project.project_id);
+    const currentUser = await client.getCurrentUser(project.project_id)
 
     if (currentUser) {
       cli.log(`Current user: ${currentUser.email}`)
 
       postData.user_id = currentUser.user_id
 
-      await client.createTimeEntry(postData);
+      await client.createTimeEntry(postData)
     } else {
-      throw new CLIError('Could not find current user. User select is not programemd yet.');
+      throw new CLIError('Could not find current user. User select is not programemd yet.')
     }
   }
 }
