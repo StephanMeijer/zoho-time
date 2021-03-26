@@ -9,6 +9,7 @@ import { ITimeEntry } from '../api.types'
 import { AuthorizationHeader, getConfig, setConfig } from '../config'
 
 import { API } from '../constants'
+import { valiDate } from '../lib/date'
 
 const axios = require('axios')
 const os = require('os')
@@ -90,30 +91,8 @@ export default class TimeEntriesLogInteractive extends Command {
 
     postData.task_id = task[taskI].task_id
 
-    const valiDate = (date: string): string | null => {
-      if (!date) {
-        return null;
-      }
-
-      const now = new Date();
-
-      const dateStr = (date: Date) => date.toISOString().substring(0, 10);
-      
-      const translators = {
-        yesterday: (): string => { now.setDate(now.getDate() + 1); return dateStr(now) },
-        tomorrow:  (): string => { now.setDate(now.getDate() - 1); return dateStr(now) },
-        today:     (): string => dateStr(now)
-      }
-
-      if (Object.keys(translators).indexOf(date) > -1) {
-        return translators[date as 'yesterday' | 'tomorrow' | 'today']()
-      }
-
-      return date.match(/(\d){4}-\d{1,2}-\d{1,2}/) !== null ? date : null;
-    }
-
     while (!postData.log_date) {
-      postData.log_date = valiDate(await cli.prompt("On what date do you want to log? (today, yesterday, tomorrow, YYYY-MM-DD)")) as string
+      postData.log_date = valiDate(await cli.prompt("On what date do you want to log? (today, yesterday, tomorrow, sunday, ..saturday, YYYY-MM-DD)")) as string
     }
 
     while ([ 'T', 'P' ].indexOf(timeOrPeriod) === -1) {
