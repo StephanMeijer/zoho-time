@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {IProjectsResponse, ITasksResponse, ITimeEntriesResponse, ITimeEntry, IUser, IUsersResponse} from './api.types'
+import {ProjectResourcesResponse, TaskResourcesResponse, TimeEntryResourceResponse, TimeEntryResource, UserResource, UserResourcesResponse} from './api.types'
 import {authorizationHeader} from './config'
 import {API} from './constants'
 
@@ -10,29 +10,29 @@ export class ApiClient {
       this.header = header
     }
 
-    public async getTasks(project_id: string): Promise<ITasksResponse> {
-      return this.request<ITasksResponse>(API.Tasks(project_id))
+    public async getTasks(project_id: string): Promise<TaskResourcesResponse> {
+      return this.request<TaskResourcesResponse>(API.Tasks(project_id))
     }
 
-    public async getProjects(): Promise<IProjectsResponse> {
-      return this.request<IProjectsResponse>(API.Projects())
+    public async getProjects(): Promise<ProjectResourcesResponse> {
+      return this.request<ProjectResourcesResponse>(API.Projects())
     }
 
-    public async getTimeEntries(): Promise<ITimeEntriesResponse> {
-      return this.request<ITimeEntriesResponse>(API.TimeEntries())
+    public async getTimeEntries(): Promise<TimeEntryResourceResponse> {
+      return this.request<TimeEntryResourceResponse>(API.TimeEntries())
     }
 
-    public async getUsers(project_id: string): Promise<IUsersResponse> {
-      return this.request<IUsersResponse>(API.Users(project_id))
+    public async getUsers(project_id: string): Promise<UserResourcesResponse> {
+      return this.request<UserResourcesResponse>(API.Users(project_id))
     }
 
-    public async getCurrentUser(project_id: string): Promise<IUser | undefined> {
-      const {users} = await this.request<IUsersResponse>(API.Users(project_id))
+    public async getCurrentUser(project_id: string): Promise<UserResource | undefined> {
+      const {users} = await this.request<UserResourcesResponse>(API.Users(project_id))
 
       return users.find(u => u.is_current_user)
     }
 
-    public async createTimeEntry(entry: Partial<ITimeEntry>) {
+    public async createTimeEntry(entry: Partial<TimeEntryResource>) {
       await axios.post('https://books.zoho.eu/api/v3/projects/timeentries', entry, {headers: this.header})
     }
 

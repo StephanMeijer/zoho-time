@@ -1,23 +1,14 @@
 import {Command, flags} from '@oclif/command'
 
 import {CLIError} from '@oclif/errors'
-import {boolean} from '@oclif/parser/lib/flags'
 
 import cli from 'cli-ux'
 import {clientFromConfig} from '../api'
-import {ITimeEntry} from '../api.types'
-import {AuthorizationHeader, getConfig, setConfig} from '../config'
+import {TimeEntryResource} from '../api.types'
+import {getConfig} from '../config'
 
-import {API} from '../constants'
 import {valiDate} from '../lib/date'
 
-const axios = require('axios')
-const os = require('os')
-const path = require('path')
-const states = require('fs').constants
-const fs = require('fs').promises
-const yaml = require('js-yaml')
-const express = require('express')
 
 export default class TimeEntriesLogInteractive extends Command {
   static description = 'Interactive time logging'
@@ -37,8 +28,6 @@ export default class TimeEntriesLogInteractive extends Command {
 
   async run() {
     const client = await clientFromConfig()
-    const data = await client.getTimeEntries()
-    const config = await getConfig()
 
     const {projects} = await client.getProjects()
 
@@ -58,7 +47,7 @@ export default class TimeEntriesLogInteractive extends Command {
 
     let projectI; let taskI; let date; let timeOrPeriod; let start; let end; let period
 
-    const postData: Partial<ITimeEntry> = {}
+    const postData: Partial<TimeEntryResource> = {}
 
     while (projects[parseInt(projectI)] === undefined) {
       projectI = await cli.prompt('What customer and project do you want to log for?')

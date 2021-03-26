@@ -1,4 +1,4 @@
-export interface IPageContext {
+export interface PageContext {
     page: number;
     per_page: number;
     has_more_page: false;
@@ -8,13 +8,13 @@ export interface IPageContext {
     sort_order: string;
 }
 
-export interface IApiResponse {
+export interface ApiResponse {
     code: number;
     message: 'success';
-    page_context: IPageContext;
+    page_context: PageContext;
 }
 
-export interface IProject {
+export interface ProjectResource {
     project_id: string;
     project_name: string;
     customer_id: string;
@@ -33,7 +33,7 @@ export interface IProject {
     users_working: string;
 }
 
-export interface ITimeEntry {
+export interface TimeEntryResource {
     time_entry_id: string;
     project_id: string;
     project_name: string;
@@ -57,7 +57,7 @@ export interface ITimeEntry {
     cost_amount: number;
 }
 
-export interface ITask {
+export interface TaskResource {
     project_id: string;
     task_id: string;
     customer_id: string;
@@ -73,7 +73,7 @@ export interface ITask {
     budget_hours: string;
 }
 
-export interface IUser {
+export interface UserResource {
     user_id: string;
     is_current_user: boolean;
     user_name: string;
@@ -85,18 +85,18 @@ export interface IUser {
     cost_rate: string;
 }
 
-export interface IUsersResponse extends IApiResponse {
-    users: IUser[];
+export interface UserResourcesResponse extends ApiResponse {
+    users: UserResource[];
 }
 
-export interface IProjectsResponse extends IApiResponse {
-    projects: IProject[];
+export interface ProjectResourcesResponse extends ApiResponse {
+    projects: ProjectResource[];
 }
 
-export interface ITimeEntriesResponse extends IApiResponse {
-    time_entries: ITimeEntry[];
+export interface TimeEntryResourceResponse extends ApiResponse {
+    time_entries: TimeEntryResource[];
 }
 
-export interface ITasksResponse extends IApiResponse {
-    task: ITask[];
+export interface TaskResourcesResponse extends ApiResponse {
+    task: TaskResource[];
 }

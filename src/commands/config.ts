@@ -1,5 +1,4 @@
 import {Command, flags} from '@oclif/command'
-import {getConfig} from '../config'
 
 const os = require('os')
 const path = require('path')
@@ -11,9 +10,7 @@ export default class Config extends Command {
   static description = 'Check or initialize config file'
 
   static examples = [
-    `$ zt config
-{....}
-`,
+    '$ zt config',
   ]
 
   static flags = {

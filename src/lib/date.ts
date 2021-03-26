@@ -40,10 +40,12 @@ export const valiDate = (date?: string): string | null => {
 
   const translators = {
     yesterday: (): string => {
-      now.setDate(now.getDate() + 1); return dateStr(now)
+      now.setDate(now.getDate() + 1)
+      return dateStr(now)
     },
     tomorrow: (): string => {
-      now.setDate(now.getDate() - 1); return dateStr(now)
+      now.setDate(now.getDate() - 1)
+      return dateStr(now)
     },
     today: (): string => dateStr(now),
   }

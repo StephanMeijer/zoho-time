@@ -3,15 +3,10 @@ import {Command, flags} from '@oclif/command'
 import {CLIError} from '@oclif/errors'
 
 import cli from 'cli-ux'
-import {getConfig, ITokenResponse, setConfig} from '../config'
+import {getConfig, TokenResponse, setConfig} from '../config'
 import {REDIRECT_URI} from '../constants'
 
 const axios = require('axios')
-const os = require('os')
-const path = require('path')
-const states = require('fs').constants
-const fs = require('fs').promises
-const yaml = require('js-yaml')
 const express = require('express')
 
 export default class Login extends Command {
@@ -53,7 +48,7 @@ export default class Login extends Command {
 
       const dateTimeOfRequest = new Date()
 
-      axios.post(url).then((response: { data: ITokenResponse }) => {
+      axios.post(url).then((response: { data: TokenResponse }) => {
         dateTimeOfRequest.setTime(dateTimeOfRequest.getTime() + 1000 * response.data.expires_in)
         config.auth = {...response.data, expires_at: dateTimeOfRequest}
 

@@ -4,15 +4,7 @@ import cli from 'cli-ux'
 import {clientFromConfig} from '../api'
 
 import {CLIError} from '@oclif/errors'
-import {IProject, ITask} from '../api.types'
-
-const axios = require('axios')
-const os = require('os')
-const path = require('path')
-const states = require('fs').constants
-const fs = require('fs').promises
-const yaml = require('js-yaml')
-const express = require('express')
+import {ProjectResource, TaskResource} from '../api.types'
 
 export default class Tasks extends Command {
   static description = 'Task Overview'
@@ -40,7 +32,7 @@ export default class Tasks extends Command {
     const client = await clientFromConfig()
     const projects = await client.getProjects()
 
-    let data: ITask[]
+    let data: TaskResource[]
 
     if (args.project) {
       const specificProjects = projects.projects.filter(p => p.project_name.toLowerCase() === args.project.toLowerCase())
@@ -53,7 +45,7 @@ export default class Tasks extends Command {
 
       data = (await client.getTasks(specificProject.project_id)).task
     } else {
-      const tasks: Promise<ITask[]>[] = projects.projects.reduce((acc: string[], p: IProject) => {
+      const tasks: Promise<TaskResource[]>[] = projects.projects.reduce((acc: string[], p: ProjectResource) => {
         if (acc.indexOf(p.project_id) === -1) {
           acc.push(p.project_id)
         }
@@ -66,7 +58,7 @@ export default class Tasks extends Command {
 
       const responses = await Promise.all(tasks)
 
-      data = responses.reduce((acc: ITask[], tasks: ITask[]) => acc.concat(tasks), [])
+      data = responses.reduce((acc: TaskResource[], tasks: TaskResource[]) => acc.concat(tasks), [])
     }
 
     cli.table(
