@@ -1,4 +1,6 @@
-export const dateStr = (date: Date) => date.toISOString().substring(0, 10);
+import * as moment from 'moment'
+
+export const dateStr = (date: Date) => moment(date).format('YYYY-MM-DD')
 
 /**
  * now test the fuck out of this function
