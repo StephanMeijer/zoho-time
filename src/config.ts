@@ -34,7 +34,6 @@ export interface IRefreshTokenResponse {
 }
 
 export interface IConfig<T> {
-    organization_id: string;
     client_id: string;
     client_secret: string;
     auth?: IAuth<T>;

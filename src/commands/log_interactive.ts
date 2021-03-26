@@ -136,7 +136,7 @@ export default class TimeEntriesLogInteractive extends Command {
 
       postData.user_id = currentUser.user_id
 
-      await client.createTimeEntry(postData, config.organization_id);
+      await client.createTimeEntry(postData);
     } else {
       throw new CLIError('Could not find current user. User select is not programemd yet.');
     }

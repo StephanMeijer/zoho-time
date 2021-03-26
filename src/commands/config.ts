@@ -22,7 +22,7 @@ export default class Config extends Command {
 
   static args = []
 
-  static initialYaml = 'client_id:\nclient_secret:\norganization_id:\n'
+  static initialYaml = 'client_id:\nclient_secret:\n'
 
   async run() {
     // const {_args, _flags} = this.parse(Config)

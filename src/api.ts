@@ -32,7 +32,7 @@ export class ApiClient {
         return users.find(u => u.is_current_user);
     }
 
-    public async createTimeEntry(entry: Partial<ITimeEntry>, organization_id: string) {
+    public async createTimeEntry(entry: Partial<ITimeEntry>) {
         await axios.post(`https://books.zoho.eu/api/v3/projects/timeentries`, entry, { headers: this.header })
     }
 
