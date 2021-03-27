@@ -34,27 +34,29 @@ export interface ProjectResource {
 }
 
 export interface TimeEntryResource {
-    time_entry_id: string;
-    project_id: string;
-    project_name: string;
-    customer_id: string;
-    customer_name: string;
-    user_id: string;
-    is_current_user: boolean;
-    user_name: string;
+    task_id: string;
     log_date: string;
-    begin_time: string;
-    end_time: string;
-    log_time: string;
-    is_billable: boolean;
-    billed_status: string;
-    invoice_id: string;
-    notes: string;
-    timer_started_at: string;
-    timer_duration_in_minutes: string;
-    created_time: string;
-    cost_rate: number;
-    cost_amount: number;
+    user_id: string;
+    project_id: string;
+
+    customer_name?: string;
+    time_entry_id?: string;
+    project_name?: string;
+    customer_id?: string;
+    is_current_user?: boolean;
+    user_name?: string;
+    begin_time?: string;
+    end_time?: string;
+    log_time?: string;
+    is_billable?: boolean;
+    billed_status?: string;
+    invoice_id?: string;
+    notes?: string;
+    timer_started_at?: string;
+    timer_duration_in_minutes?: string;
+    created_time?: string;
+    cost_rate?: number;
+    cost_amount?: number;
 }
 
 export interface TaskResource {
