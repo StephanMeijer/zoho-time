@@ -39,7 +39,9 @@ export default class Login extends Command {
 
       grant = req.query
 
-      res.send('<h1>You may get the fuck out of this fucking tab</h1>')
+      this.log("Succesfull!")
+
+      res.send('<script>window.location = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";</script>')
       res.connection.server.close()
 
       const generatedStateSnd = Math.random().toString(36).substring(2)
