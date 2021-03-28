@@ -5,10 +5,8 @@ import {CLIError} from '@oclif/errors'
 import cli from 'cli-ux'
 import {clientFromConfig} from '../api'
 import {TimeEntryResource} from '../api.types'
-import {getConfig} from '../config'
 
 import {valiDate} from '../lib/date'
-
 
 export default class TimeEntriesLogInteractive extends Command {
   static description = 'Interactive time logging'
@@ -45,17 +43,13 @@ export default class TimeEntriesLogInteractive extends Command {
 
     console.log('')
 
-    let projectI; let taskI; let date; let timeOrPeriod; let start; let end; let period
-
     const postData: Partial<TimeEntryResource> = {}
 
-    while (projects[parseInt(projectI)] === undefined) {
-      projectI = await cli.prompt('What customer and project do you want to log for?')
-    }
+    const projectI = await cli.prompt('What customer and project do you want to log for?')
 
     console.log('')
 
-    const project = projects[parseInt(projectI)]
+    const project = projects[parseInt(projectI, 10)]
 
     postData.project_id = project.project_id
 
@@ -74,21 +68,15 @@ export default class TimeEntriesLogInteractive extends Command {
 
     console.log('')
 
-    while (projects[parseInt(taskI)] === undefined) {
-      taskI = await cli.prompt('What task do you want to log for?')
-    }
+    const taskI = await cli.prompt('What task do you want to log for?')
 
     postData.task_id = task[taskI].task_id
 
-    while (!postData.log_date) {
-      postData.log_date = valiDate(await cli.prompt('On what date do you want to log? (today, yesterday, tomorrow, sunday, ..saturday, YYYY-MM-DD)')) as string
-    }
+    postData.log_date = valiDate(await cli.prompt('On what date do you want to log? (today, yesterday, tomorrow, sunday, ..saturday, YYYY-MM-DD)')) as string
 
-    while (['T', 'P'].indexOf(timeOrPeriod) === -1) {
-      timeOrPeriod = await cli.prompt('Time or period? [T / P]')
-    }
+    const timeOrPeriod = await cli.prompt('Time or period? [T / P]')
 
-    if (timeOrPeriod == 'T') {
+    if (timeOrPeriod === 'T') {
       postData.log_time = await cli.prompt('How long? [HH:MM]')
     } else {
       postData.begin_time = await cli.prompt('When did it begin? [HH:MM]')
@@ -104,7 +92,7 @@ export default class TimeEntriesLogInteractive extends Command {
 
       postData.user_id = currentUser.user_id
 
-      await client.createTimeEntry(postData)
+      await client.createTimeEntry(postData as TimeEntryResource)
     } else {
       throw new CLIError('Could not find current user. User select is not programemd yet.')
     }

@@ -3,7 +3,7 @@ export const TOKEN_ENDPOINT = 'https://accounts.zoho.eu/oauth/v2/token' // TODO:
 export const REDIRECT_URI = 'http://localhost:8182/redirect'
 
 export const API = {
-  RefreshToken: (client_id: string, client_secret: string, refresh_token: string): string => {
+  refreshToken: (client_id: string, client_secret: string, refresh_token: string): string => {
     const url = new URL(TOKEN_ENDPOINT)
 
     url.search = (new URLSearchParams({
@@ -17,8 +17,8 @@ export const API = {
     return url.toString()
   },
 
-  Projects: () => `${API_BASE_URL}/projects`,
-  TimeEntries: () => `${API_BASE_URL}/projects/timeentries?sort_column=log_date`,
-  Tasks: (project_id: string) => `${API_BASE_URL}/projects/${project_id}/tasks`,
-  Users: (project_id: string) => `${API_BASE_URL}/projects/${project_id}/users`,
+  projects: () => `${API_BASE_URL}/projects`,
+  timeEntries: () => `${API_BASE_URL}/projects/timeentries?sort_column=log_date`,
+  tasks: (project_id: string) => `${API_BASE_URL}/projects/${project_id}/tasks`,
+  users: (project_id: string) => `${API_BASE_URL}/projects/${project_id}/users`,
 }

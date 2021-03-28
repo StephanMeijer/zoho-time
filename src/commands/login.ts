@@ -3,11 +3,18 @@ import {Command, flags} from '@oclif/command'
 import {CLIError} from '@oclif/errors'
 
 import cli from 'cli-ux'
+import express = require('express')
+import {Socket} from 'net'
 import {getConfig, TokenResponse, setConfig} from '../config'
 import {REDIRECT_URI} from '../constants'
 
 const axios = require('axios')
-const express = require('express')
+
+interface ExpressSocket extends Socket {
+  server: {
+    close: () => void;
+  };
+}
 
 export default class Login extends Command {
   static description = 'Perform OAuth'
@@ -31,18 +38,19 @@ export default class Login extends Command {
 
     let grant
 
-    app.get('/redirect', (req, res) => {
+    app.get('/redirect', (req: express.Request, res: express.Response) => {
       if (generatedState !== req.query.state) {
-        res.connection.server.close()
+        (res.connection as ExpressSocket).server.close()
         throw new CLIError(`State does not match generated state. State generated: ${generatedState}, state given: ${req.query.state}`)
       }
 
       grant = req.query
 
-      this.log("Succesfull!")
+      this.log('Succesfull!')
 
-      res.send('<script>window.location = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";</script>')
-      res.connection.server.close()
+      res.send('<script>window.location = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";</script>');
+
+      (res.connection as ExpressSocket).server.close()
 
       const generatedStateSnd = Math.random().toString(36).substring(2)
 
@@ -51,7 +59,7 @@ export default class Login extends Command {
       const dateTimeOfRequest = new Date()
 
       axios.post(url).then((response: { data: TokenResponse }) => {
-        dateTimeOfRequest.setTime(dateTimeOfRequest.getTime() + 1000 * response.data.expires_in)
+        dateTimeOfRequest.setTime(dateTimeOfRequest.getTime() + (1000 * response.data.expires_in))
         config.auth = {...response.data, expires_at: dateTimeOfRequest}
 
         setConfig(config)

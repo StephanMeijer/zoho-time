@@ -1,6 +1,6 @@
 import {CLIError} from '@oclif/errors'
 import axios from 'axios'
-import {API, REDIRECT_URI} from './constants'
+import {API} from './constants'
 
 const os = require('os')
 const path = require('path')
@@ -95,9 +95,12 @@ export const authorizationHeader = async (config: Config<Date> | undefined = und
 
   if (!await validToken()) {
     const dateTimeOfRequest = new Date()
-    const response = await axios.post<RefreshTokenResponse>(API.RefreshToken(config.client_id, config.client_secret, config.auth.refresh_token))
+    const response = await axios.post<RefreshTokenResponse>(API.refreshToken(config.client_id, config.client_secret, config.auth.refresh_token))
 
-    dateTimeOfRequest.setTime(dateTimeOfRequest.getTime() + 1000 * response.data.expires_in)
+    dateTimeOfRequest.setTime(
+      dateTimeOfRequest.getTime() + (1000 * response.data.expires_in),
+    )
+
     config.auth = {...config.auth, ...response.data, expires_at: dateTimeOfRequest}
     setConfig(config)
   }

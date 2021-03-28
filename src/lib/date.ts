@@ -15,7 +15,7 @@ export const valiDate = (date?: string): string | null => {
   const dayOfMonth = date.match(/^(\d{1,2})$/)
 
   if (dayOfMonth) {
-    now.setDate(parseInt(date))
+    now.setDate(parseInt(date, 10))
     return dateStr(now)
   }
 
@@ -54,5 +54,9 @@ export const valiDate = (date?: string): string | null => {
     return translators[date as 'yesterday' | 'tomorrow' | 'today']()
   }
 
-  return date.match(/(\d){4}-\d{1,2}-\d{1,2}/) !== null ? date : null
+  if (date.match(/(\d){4}-\d{1,2}-\d{1,2}/) === null) {
+    return null
+  }
+
+  return date
 }

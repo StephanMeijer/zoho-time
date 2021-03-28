@@ -11,23 +11,23 @@ export class ApiClient {
     }
 
     public async getTasks(project_id: string): Promise<TaskResourcesResponse> {
-      return this.request<TaskResourcesResponse>(API.Tasks(project_id))
+      return this.request<TaskResourcesResponse>(API.tasks(project_id))
     }
 
     public async getProjects(): Promise<ProjectResourcesResponse> {
-      return this.request<ProjectResourcesResponse>(API.Projects())
+      return this.request<ProjectResourcesResponse>(API.projects())
     }
 
     public async getTimeEntries(): Promise<TimeEntryResourceResponse> {
-      return this.request<TimeEntryResourceResponse>(API.TimeEntries())
+      return this.request<TimeEntryResourceResponse>(API.timeEntries())
     }
 
     public async getUsers(project_id: string): Promise<UserResourcesResponse> {
-      return this.request<UserResourcesResponse>(API.Users(project_id))
+      return this.request<UserResourcesResponse>(API.users(project_id))
     }
 
     public async getCurrentUser(project_id: string): Promise<UserResource | undefined> {
-      const {users} = await this.request<UserResourcesResponse>(API.Users(project_id))
+      const {users} = await this.request<UserResourcesResponse>(API.users(project_id))
 
       return users.find(u => u.is_current_user)
     }
