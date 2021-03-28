@@ -1,14 +1,18 @@
 version: 2.1
 orbs:
   node: circleci/node@3.0.0
-workflows:
-  check_urls:
-  steps:
-    - checkout
-    - run:
-        name: "Only URI's in constants.ts"
-        command: |
-          ! grep --exclude "constants.ts" -P "https?://" src -R
+jobs:
+  smalltest:
+    docker:
+      - image: "circleci/node:latest"
+    steps:
+      - checkout
+      - run:
+          name: "Only URI's in constants.ts"
+          command: |
+            ! grep --exclude "constants.ts" -P "https?://" src -R
+workflow:
   node-tests:
     jobs:
+      - smalltest
       - node/test
